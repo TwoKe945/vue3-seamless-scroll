@@ -7,7 +7,7 @@ declare module 'vue' {
     Counter: typeof import('./src/components/Counter.vue')['default']
     Footer: typeof import('./src/components/Footer.vue')['default']
     ImageList: typeof import('./src/components/ImageList.vue')['default']
-    RollContainer: typeof import('./src/components/RollContainer.vue')['default']
+    RollContainer: typeof import('./src/components/ScrollContainer.vue')['default']
   }
 }
 
