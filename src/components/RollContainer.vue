@@ -4,16 +4,18 @@ import type { StyleValue } from 'vue'
 interface ScrollContainerProps {
   el: string // 绑定的滚动元素
   to?: 'top' | 'left' | 'right' | 'bottom' // 滚动的方向
-  duration?: number // 滚动的时间
+  duration?: number // 滚动的间隔
   dishover?: boolean // 是否悬停
   width?: string // 容器的宽度
   height?: string // 容器的高度
+  sleep?: number // 滚动的间隔
 }
 
 const props = withDefaults(defineProps<ScrollContainerProps>(), {
   to: 'top',
   duration: 50,
   dishover: true,
+  sleep: 120,
 })
 
 // 滚动区域
@@ -90,7 +92,7 @@ function move(startStep = 0) {
     const timer = setTimeout(() => {
       enableTransition.value = true
       clearTimeout(timer)
-    }, 100)
+    }, props.sleep)
   }
   stepCount.value += 1
 }
