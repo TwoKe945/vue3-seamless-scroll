@@ -11,6 +11,7 @@
       font-mono
       font-size="1.5rem"
       text-blue
+      hover="cursor-pointer"
     >
       {{ i }}
     </div>

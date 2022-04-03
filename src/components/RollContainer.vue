@@ -1,15 +1,17 @@
-import type { ElementSize from '@vueuse/core';
-<script setup lang="ts">import type { StyleValue } from 'vue'
+<script setup lang="ts">
+import type { StyleValue } from 'vue'
 
 interface ScrollContainerProps {
   el: string // 绑定的滚动元素
   to?: 'top' | 'left' | 'right' | 'bottom' // 滚动的方向
   duration?: number // 滚动的时间
+  dishover?: boolean // 是否悬停
 }
 
 const props = withDefaults(defineProps<ScrollContainerProps>(), {
   to: 'top',
   duration: 50,
+  dishover: true,
 })
 
 // 滚动区域
@@ -143,8 +145,8 @@ const style = computed(() => (enableTransition.value
   <div
     ref="rollContainer" :style="rollContainerStyle" bg-red
     overflow="hidden"
-    @mouseover="toggleScroll(false)"
-    @mouseout="toggleScroll(true)"
+    @mouseover="props.dishover && toggleScroll(false)"
+    @mouseout="props.dishover && toggleScroll(true)"
   >
     <div ref="rollArea" :style="style">
       <slot name="scrollPanel" />
