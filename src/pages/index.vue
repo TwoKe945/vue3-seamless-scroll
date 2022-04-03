@@ -1,11 +1,12 @@
 <script setup lang="ts">
-
 </script>
 
 <template>
   <div flex="~ row" justify="center">
-    <RollContainer>
-      <ThePanel />
+    <RollContainer el="panel">
+      <template #scrollPanel>
+        <ThePanel id="panel" />
+      </template>
     </RollContainer>
   </div>
 </template>

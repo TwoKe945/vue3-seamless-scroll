@@ -5,8 +5,8 @@
       :key="i"
       m1
       rounded="10px"
-      w-100
-      h-50
+      w100
+      h50
       bg-gray-200
       font-mono
       font-size="1.5rem"
