@@ -33,7 +33,7 @@ interface ElementSize {
 const rect = ref<ElementSize>({ width: 0, height: 0 })
 
 interface Strategy {
-  style: (step: number) => { transform: string; flexDirection: string }
+  style: (step: number) => { transform?: string; flexDirection?: string; width?: string; height?: string }
   isOverflow: (stepCount: number, size: ElementSize) => boolean
   start: (size: ElementSize) => number
 }
@@ -131,16 +131,18 @@ onUnmounted(() => {
   stopWatchRect()
 })
 
-const style = computed(() => (enableTransition.value
-  ? {
-    transition: `all ${props.duration}ms`,
-    display: 'flex',
-    ...strategy.style(stepCount.value),
-  } as StyleValue
-  : {
-    display: 'flex',
-    ...strategy.style(stepCount.value),
-  } as StyleValue))
+const style = computed(() => {
+  return enableTransition.value
+    ? {
+      transition: `all ${props.duration}ms`,
+      display: 'flex',
+      ...strategy.style(stepCount.value),
+    } as StyleValue
+    : {
+      display: 'flex',
+      ...strategy.style(stepCount.value),
+    } as StyleValue
+})
 </script>
 
 <template>

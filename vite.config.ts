@@ -17,6 +17,7 @@ export default defineConfig({
   plugins: [
     Vue({
       reactivityTransform: true,
+      include: [/\.vue$/, /\.md$/],
     }),
 
     // https://github.com/hannoeru/vite-plugin-pages
@@ -41,6 +42,7 @@ export default defineConfig({
     // https://github.com/antfu/unocss
     // see unocss.config.ts for config
     Unocss(),
+
   ],
 
   // https://github.com/vitest-dev/vitest
