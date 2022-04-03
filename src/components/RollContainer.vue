@@ -6,6 +6,8 @@ interface ScrollContainerProps {
   to?: 'top' | 'left' | 'right' | 'bottom' // 滚动的方向
   duration?: number // 滚动的时间
   dishover?: boolean // 是否悬停
+  width?: string // 容器的宽度
+  height?: string // 容器的高度
 }
 
 const props = withDefaults(defineProps<ScrollContainerProps>(), {
@@ -108,8 +110,8 @@ const stopWatchRollArea = watch(rollArea, () => initElementSize())
 
 const stopWatchRect = watch(rect, (value) => {
   const style = {
-    width: `${value.width}px`,
-    height: `${value.height}px`,
+    width: props.width || `${value.width}px`,
+    height: props.height || `${value.height}px`,
   }
   rollContainerStyle.value = {
     ...rollContainerStyle.value,
@@ -143,7 +145,7 @@ const style = computed(() => (enableTransition.value
 
 <template>
   <div
-    ref="rollContainer" :style="rollContainerStyle" bg-red
+    ref="rollContainer" :style="rollContainerStyle"
     overflow="hidden"
     @mouseover="props.dishover && toggleScroll(false)"
     @mouseout="props.dishover && toggleScroll(true)"

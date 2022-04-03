@@ -3,7 +3,11 @@
 
 <template>
   <div flex="~ row" justify="center">
-    <RollContainer el="panel" :dishover="false" to="right" :duration="10">
+    <RollContainer
+      el="panel" to="bottom"
+      height="10rem"
+      :duration="40"
+    >
       <template #scrollPanel>
         <ThePanel id="panel" />
       </template>

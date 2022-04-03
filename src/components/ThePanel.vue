@@ -1,3 +1,6 @@
+<script setup lang="ts">
+</script>
+
 <template>
   <div flex="~ col">
     <div
@@ -13,7 +16,10 @@
       text-blue
       hover="cursor-pointer"
     >
-      {{ i }}
+      <img
+        w-full h-full
+        rounded="10px" :src="`https://picsum.photos/seed/${i}/1920/1080`"
+      >
     </div>
   </div>
 </template>
