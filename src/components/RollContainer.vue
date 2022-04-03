@@ -1,16 +1,21 @@
 import type { ElementSize from '@vueuse/core';
-<script setup lang="ts">
+<script setup lang="ts">import type { StyleValue } from 'vue'
 
 interface ScrollContainerProps {
   el: string // 绑定的滚动元素
+  to?: 'top' | 'left' | 'right' | 'bottom' // 滚动的方向
+  duration?: number // 滚动的时间
 }
 
-const props = defineProps<ScrollContainerProps>()
+const props = withDefaults(defineProps<ScrollContainerProps>(), {
+  to: 'top',
+  duration: 50,
+})
 
 // 滚动区域
 const rollArea = ref<HTMLDivElement>()
 // 滚动计步数
-const stepCount = ref(0)
+const stepCount = ref()
 const scrolling = ref(true)
 const toggleScroll = useToggle(scrolling)
 const enableTransition = ref(true)
@@ -23,14 +28,57 @@ interface ElementSize {
 
 const rect = ref<ElementSize>({ width: 0, height: 0 })
 
+interface Strategy {
+  style: (step: number) => { transform: string; flexDirection: string }
+  isOverflow: (stepCount: number, size: ElementSize) => boolean
+  start: (size: ElementSize) => number
+}
+
+const strategyFactory = {
+  top: {
+    style: step => ({
+      transform: `translateY(-${step}px)`,
+      flexDirection: 'column',
+    }),
+    isOverflow: (stepCount, size) => Math.abs(stepCount) >= size.height,
+    start: () => 0,
+  } as Strategy,
+  bottom: {
+    style: step => ({
+      transform: `translateY(${step}px)`,
+      flexDirection: 'column',
+    }),
+    isOverflow: stepCount => Math.abs(stepCount) <= 0,
+    start: size => -size.height,
+  } as Strategy,
+  left: {
+    style: step => ({
+      transform: `translateX(-${step}px)`,
+      flexDirection: 'row',
+    }),
+    isOverflow: (stepCount, size) => Math.abs(stepCount) >= size.width,
+    start: () => 0,
+  } as Strategy,
+  right: {
+    style: step => ({
+      transform: `translateX(${step}px)`,
+      flexDirection: 'row',
+    }),
+    isOverflow: stepCount => Math.abs(stepCount) <= 0,
+    start: size => -size.width,
+  } as Strategy,
+}
+
+const strategy = strategyFactory[props.to]
+
 /**
  * 检查是否超出边界
  */
-const isOverflow = computed(() => Math.abs(stepCount.value) >= rect.value.width)
+const isOverflow = computed(() => strategy.isOverflow(stepCount.value, rect.value))
 /**
  * 移动
  */
-function move(defaultStep = 1, startStep = 0) {
+function move(startStep = 0) {
   if (!scrolling.value) return
   if (isOverflow.value) {
     enableTransition.value = false
@@ -40,7 +88,7 @@ function move(defaultStep = 1, startStep = 0) {
       clearTimeout(timer)
     }, 100)
   }
-  stepCount.value += defaultStep
+  stepCount.value += 1
 }
 
 const rollContainerStyle = ref({})
@@ -68,7 +116,8 @@ const stopWatchRect = watch(rect, (value) => {
 })
 
 onMounted(() => {
-  rollTimer = setInterval(() => move(), 50)
+  stepCount.value = strategy.start(rect.value)
+  rollTimer = setInterval(() => move(strategy.start(rect.value)), props.duration)
 })
 
 onUnmounted(() => {
@@ -80,12 +129,14 @@ onUnmounted(() => {
 
 const style = computed(() => (enableTransition.value
   ? {
-    transition: 'all 50ms',
-    transform: `translateX(-${stepCount.value}px)`,
-  }
+    transition: `all ${props.duration}ms`,
+    display: 'flex',
+    ...strategy.style(stepCount.value),
+  } as StyleValue
   : {
-    transform: `translateX(-${stepCount.value}px)`,
-  }))
+    display: 'flex',
+    ...strategy.style(stepCount.value),
+  } as StyleValue))
 </script>
 
 <template>
@@ -95,7 +146,7 @@ const style = computed(() => (enableTransition.value
     @mouseover="toggleScroll(false)"
     @mouseout="toggleScroll(true)"
   >
-    <div ref="rollArea" :style="style" flex="~">
+    <div ref="rollArea" :style="style">
       <slot name="scrollPanel" />
       <slot name="scrollPanel" />
     </div>
