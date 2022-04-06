@@ -226,6 +226,10 @@ function defineTableScroll<T>(
   bodyRowClass = 'table-scroll-row') // 可自定义的单行样式
 ```
 
+> 针对数据样式定制
+
+![](./assert/code.png)
+
 
 # fix
 
