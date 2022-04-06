@@ -1,5 +1,5 @@
 import type { ExtractPropTypes, PropType } from 'vue'
-import { defineComponent } from 'vue'
+import { defineComponent, renderList } from 'vue'
 import { Assert } from './exception'
 
 /**
@@ -84,7 +84,7 @@ const seamlessScrollProps = {
 
 export type SeamlessScrollProps = ExtractPropTypes<typeof seamlessScrollProps>
 
-function createSeamlessScroll() {
+function defineSeamlessScroll() {
   return defineComponent({
     props: seamlessScrollProps,
     setup(props, ctx) {
@@ -202,31 +202,128 @@ function createSeamlessScroll() {
   })
 }
 
-export const SeamlessScroll = createSeamlessScroll()
+/**
+ * 无缝滚动组件
+ */
+export const SeamlessScroll = defineSeamlessScroll()
 
-function createMessageScroll() {
+const messageScrollProps = {
+  ...seamlessScrollProps,
+  messages: {
+    type: Array as PropType<string[]>,
+    required: true,
+  },
+  messageFormat: {
+    type: Function as PropType<(message: string) => string>,
+    default: (message: string) => message,
+  },
+}
+
+export type MessageScrollProps = ExtractPropTypes<typeof messageScrollProps>
+
+function defineMessageScroll() {
   return defineComponent({
-    props: {
-      messages: {
-        type: Array as PropType<string[]>,
-        required: true,
-      },
-      messageFormat: {
-        type: Function as PropType<(message: string) => string>,
-        default: (message: string) => message,
-      },
-      ...seamlessScrollProps,
-    },
+    props: messageScrollProps,
     setup(props) {
+      const innerHTML = computed(() => props.messages!.map(props.messageFormat).join(''))
+
       return () => h(SeamlessScroll,
         { ...props }, {
-          default: h('div', { style: 'white-space: nowrap;', innerHTML: props.messages.map(props.messageFormat).join('') }),
+          default: h('div', { style: 'white-space: nowrap;', innerHTML: innerHTML.value }),
         })
     },
   })
 }
 
 /**
- * 公告消息滚动
+ * 公告消息滚动滚动组件
  */
-export const MessageScroll = createMessageScroll()
+export const MessageScroll = defineMessageScroll()
+
+interface Column {
+  title: string // 列名
+  key: string // 列key
+  width: string // 列宽度
+  style?: string // 列样式
+}
+
+export type RowData<Columns extends readonly Column[]> = {
+  [key in Columns[number]['key']]: any
+}
+
+function mergeStyle(defaultStyle: any, style: any) {
+  return {
+    ...defaultStyle,
+    ...style,
+  }
+}
+
+/**
+ *  定义列
+ * @param columns
+ * @returns
+ */
+export function defineColumns<T extends Column>(columns: readonly T[]): readonly T[] {
+  return columns
+}
+
+/**
+ * 表格滚动组件
+ * @returns
+ */
+export function defineTableScroll<T>(
+  columns: readonly Column[],
+  formatStyle?: (key: string, value: any) => any,
+  tableClass = 'table-scroll',
+  headerClass = 'table-scroll-header',
+  bodyClass = 'table-scroll-body',
+  bodyRowClass = 'table-scroll-row') {
+  return defineComponent({
+    props: {
+      data: {
+        type: Array as PropType<T[]>,
+        required: true,
+      },
+      ...seamlessScrollProps,
+    },
+    setup(props) {
+      const defaultHeadStyle = {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      }
+
+      const defaultColumnStyle = (col: Column) => ({
+        textAligin: 'center',
+        width: col.width,
+      })
+
+      const defaultRowStyle = {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        cursor: 'pointer',
+      }
+
+      return () => h('div', {
+        class: tableClass,
+      }, [
+        h('ul', {
+          class: headerClass,
+          style: mergeStyle(defaultHeadStyle, {}),
+        }, renderList(columns, col => h('li', { style: mergeStyle(defaultColumnStyle(col), col.style) }, col.title))),
+        h(SeamlessScroll, {
+          ...props,
+          class: bodyClass,
+        },
+        h('div', {},
+          renderList(props.data, data => h('ul', {
+            class: bodyRowClass,
+            style: mergeStyle(defaultRowStyle, {}),
+          }, renderList(columns, col => h('li', { style: { ...mergeStyle(defaultColumnStyle(col), col.style), ...(formatStyle ? formatStyle(col.key, (data as any)[col.key]) : {}) } }, (data as any)[col.key])))),
+        ),
+        ),
+      ])
+    },
+  })
+}

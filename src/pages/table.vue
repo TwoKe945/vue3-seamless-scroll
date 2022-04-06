@@ -65,7 +65,7 @@ const TableScroll = defineTableScroll<TableData>(columns)
 .table-scroll-body {
   background-color: #00ff0020;
   width:400px !important;
-  padding: 10px;
+  padding: 10px 0px;
 }
 
 .table-scroll-row {

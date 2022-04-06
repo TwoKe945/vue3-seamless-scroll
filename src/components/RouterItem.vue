@@ -15,5 +15,10 @@
         /message
       </div>
     </router-link>
+    <router-link to="/table">
+      <div btn ml-5>
+        /table
+      </div>
+    </router-link>
   </div>
 </template>
