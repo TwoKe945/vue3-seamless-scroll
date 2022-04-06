@@ -92,6 +92,8 @@ const props = withDefaults(defineProps<{
 |  messages  |  展示的消息  | [] (必填项)  |  Array<string> |
 |  messageFormat  |  单条信息格式化  |  (message: string) => message`, |  Function<(string) => string >   |
 
+> 注：这是由SeamlessScroll封装的组件，支持SeamlessScroll的所有属性
+
 
 ```html 
 <script setup lang="ts">
