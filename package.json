@@ -1,5 +1,5 @@
 {
-  "name": "vue-scroll-component-example",
+  "name": "vue3-seamless-scroll",
   "private": true,
   "packageManager": "pnpm@6.32.3",
   "scripts": {
