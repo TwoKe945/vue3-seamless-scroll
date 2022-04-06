@@ -286,7 +286,7 @@ export function defineTableScroll<T>(
       },
       ...seamlessScrollProps,
     },
-    setup(props) {
+    setup(props, ctx) {
       const defaultHeadStyle = {
         display: 'flex',
         flexDirection: 'row',
@@ -319,6 +319,7 @@ export function defineTableScroll<T>(
         h('div', {},
           renderList(props.data, data => h('ul', {
             class: bodyRowClass,
+            onClick: () => ctx.emit('clickItem', data),
             style: mergeStyle(defaultRowStyle, {}),
           }, renderList(columns, col => h('li', { style: { ...mergeStyle(defaultColumnStyle(col), col.style), ...(formatStyle ? formatStyle(col.key, (data as any)[col.key]) : {}) } }, (data as any)[col.key])))),
         ),

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { RowData } from '../composables/scroll-core'
+import type { RowData } from '~/composables/scroll-core'
 import { defineColumns, defineTableScroll } from '~/composables/scroll-core'
 
 const columns = defineColumns([
@@ -46,11 +46,38 @@ const dataArray: TableData[] = [
 ]
 
 const TableScroll = defineTableScroll<TableData>(columns)
+const TableScroll2 = defineTableScroll<TableData>(columns, (key: string, value: any) => {
+  if (key === 'age') {
+    if (value >= 30)
+      return { color: 'red' }
+    else if (value < 30 && value > 20)
+      return { color: 'blue' }
+    else
+      return { color: 'green' }
+  }
+  else if (key === 'group') {
+    if (value === 'A')
+      return { color: 'green' }
+    else if (value === 'B')
+      return { color: 'blue' }
+    else
+      return { color: 'red' }
+  }
+  return {}
+})
+
+const clickItemHandler = function(data: TableData) {
+  alert(`点击： ${data.name}`)
+}
 
 </script>
 <template>
   <div flex="~ row" justify="center">
-    <TableScroll :data="dataArray" />
+    <TableScroll :data="dataArray" @clickItem="clickItemHandler" />
+  </div>
+
+  <div flex="~ row" m5 justify="center">
+    <TableScroll2 :data="dataArray" @clickItem="clickItemHandler" />
   </div>
 </template>
 
@@ -59,11 +86,11 @@ const TableScroll = defineTableScroll<TableData>(columns)
   width:400px;
 }
 .table-scroll-header {
-  background-color: #ff000040;
+  background-color: #1010b820;
   padding: 10px;
 }
 .table-scroll-body {
-  background-color: #00ff0020;
+  background-color: #00000040;
   width:400px !important;
   padding: 10px 0px;
 }
@@ -75,5 +102,4 @@ const TableScroll = defineTableScroll<TableData>(columns)
 .table-scroll-row:hover{
   background-color: #0000ff20;
 }
-
 </style>
