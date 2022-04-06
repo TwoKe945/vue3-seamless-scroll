@@ -7,6 +7,7 @@ import { SeamlessScroll } from '~/composables/scroll-core'
   <div>
     <div flex="~ row" justify="center">
       <SeamlessScroll
+        m2
         width="100vw" to="left"
         :duration="40"
       >
@@ -15,6 +16,7 @@ import { SeamlessScroll } from '~/composables/scroll-core'
     </div>
     <div flex="~ row" justify="center">
       <SeamlessScroll
+        m2
         width="100vw" to="right"
         :duration="40"
       >

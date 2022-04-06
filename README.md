@@ -19,7 +19,6 @@ Demo: https://vuescroll-container.netlify.app/
 # 快速使用
 
 > 暂时不支持npm， yarn安装
-
 ```html
 <script setup lang="ts">
 import { SeamlessScroll } from '~/composables/scroll-core'
@@ -47,6 +46,7 @@ const props = withDefaults(defineProps<{
   length: 3,
   dir: 'column',
 })
+
 </script>
 
 <template>
@@ -59,10 +59,16 @@ const props = withDefaults(defineProps<{
     <div
       v-for="i in props.length"
       :key="i"
+      :style="{
+        // 注意事项，横向滚动和纵向滚动会造成item的外边距不受控制，因此，横向滚动设置左右外边距，纵向滚动设置上下外边距
+        marginTop: props.dir === 'row' ? '0px' : '5px',
+        marginBottom: props.dir === 'row' ? '0px' : '5px',
+        marginLeft: props.dir === 'row' ? '5px' : '0px',
+        marginRight: props.dir === 'row' ? '5px' : '0px',
+      }"
       rounded="10px"
       h50
       w100
-      m2
       bg-gray-200
       font-mono
       font-size="1.5rem"

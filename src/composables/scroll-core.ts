@@ -135,6 +135,7 @@ function createSeamlessScroll() {
 
       const stopWatchRect = watch(rect, (value) => {
         const style = {
+          overflow: 'hidden',
           width: props.width || `${value.width}px`,
           height: props.height || `${value.height}px`,
         }
@@ -180,7 +181,6 @@ function createSeamlessScroll() {
         const compChildren = slot![0].children as any
 
         return h('div', {
-          overflow: 'hidden',
           style: rollContainerStyle.value,
           onMouseover: () => props.dishover && toggleScroll(false),
           onMouseout: () => props.dishover && toggleScroll(true),
