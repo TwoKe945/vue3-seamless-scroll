@@ -4,9 +4,10 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
-    Counter: typeof import('./src/components/Counter.vue')['default']
     Footer: typeof import('./src/components/Footer.vue')['default']
     ImageList: typeof import('./src/components/ImageList.vue')['default']
+    Nav: typeof import('./src/components/Nav.vue')['default']
+    RouterItem: typeof import('./src/components/RouterItem.vue')['default']
     Src: typeof import('./src/components/SeamlessScroll/src/index.vue')['default']
   }
 }

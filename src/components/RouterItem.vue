@@ -1,0 +1,19 @@
+<template>
+  <div flex="~ row" items="center">
+    <router-link to="/row">
+      <div btn ml-5>
+        /row
+      </div>
+    </router-link>
+    <router-link to="/column">
+      <div btn ml-5>
+        /column
+      </div>
+    </router-link>
+    <router-link to="/message">
+      <div btn ml-5>
+        /message
+      </div>
+    </router-link>
+  </div>
+</template>

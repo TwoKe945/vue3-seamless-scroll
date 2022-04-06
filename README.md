@@ -12,7 +12,8 @@ Demo: https://vuescroll-container.netlify.app/
 | **属性名** | **描述** | **默认值** |  **类型** |
 |:---|:---|:---|:---|
 |  to  |  滚动方向  | top  |  'top'\|'bottom'\|'left'\|'right' |
-|  duration  |  动画时间：  | 17 (1秒 60次) |  Number ||  dishover  | 是否启用悬停（鼠标悬停停止滚动） | true  |  Number |
+|  duration  |  动画时间：  | 17 (1秒 60次) |  Number |
+|  dishover  | 是否启用悬停（鼠标悬停停止滚动） | true  |  Number |
 |  width  |  可视区宽度  |  auto  |  Number |
 |  height  |  可视区高度  |  auto  |  Number |
 
@@ -81,6 +82,31 @@ const props = withDefaults(defineProps<{
       >
     </div>
   </div>
+</template>
+```
+
+# MessageScroll
+
+| **属性名** | **描述** | **默认值** |  **类型** |
+|:---|:---|:---|:---|
+|  messages  |  展示的消息  | [] (必填项)  |  Array<string> |
+|  messageFormat  |  单条信息格式化  |  (message: string) => message`, |  Function<(string) => string >   |
+
+
+```html 
+<script setup lang="ts">
+import { MessageScroll
+
+} from '~/composables/scroll-core'
+
+</script>
+
+<template>
+  <MessageScroll
+    :messages="['xxxx', 'yyyy', 'zzzz']"
+    :message-format="message => `${message}... &nbsp;&nbsp;`"
+    to="left" :duration="50"
+  />
 </template>
 ```
 

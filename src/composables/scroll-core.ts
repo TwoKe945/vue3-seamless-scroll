@@ -1,4 +1,4 @@
-import type { PropType } from 'vue'
+import type { ExtractPropTypes, PropType } from 'vue'
 import { defineComponent } from 'vue'
 import { Assert } from './exception'
 
@@ -57,32 +57,36 @@ const STRATEGY_FACTORY = {
   } as Strategy,
 }
 
+const seamlessScrollProps = {
+  to: { // 滚动方向
+    type: String as PropType<'top' | 'left' | 'right' | 'bottom'>,
+    default: 'top',
+  },
+  duration: { // 动画时间帧数 1 秒 60 次
+    type: Number,
+    default: 17,
+  },
+  dishover: { // 是否启用悬停
+    type: Boolean,
+    default: true,
+  },
+  width: { // 可视窗口宽度
+    type: String,
+  },
+  height: { // 可视窗口高度
+    type: String,
+  },
+  sleep: { // 滚动间隔
+    type: Number,
+    default: 120,
+  },
+}
+
+export type SeamlessScrollProps = ExtractPropTypes<typeof seamlessScrollProps>
+
 function createSeamlessScroll() {
   return defineComponent({
-    props: {
-      to: { // 滚动方向
-        type: String as PropType<'top' | 'left' | 'right' | 'bottom'>,
-        default: 'top',
-      },
-      duration: { // 动画时间帧数 1 秒 60 次
-        type: Number,
-        default: 17,
-      },
-      dishover: { // 是否启用悬停
-        type: Boolean,
-        default: true,
-      },
-      width: { // 可视窗口宽度
-        type: String,
-      },
-      height: { // 可视窗口高度
-        type: String,
-      },
-      sleep: { // 滚动间隔
-        type: Number,
-        default: 120,
-      },
-    },
+    props: seamlessScrollProps,
     setup(props, ctx) {
       // 滚动区域
       const rollArea = ref<HTMLDivElement>()
@@ -199,3 +203,30 @@ function createSeamlessScroll() {
 }
 
 export const SeamlessScroll = createSeamlessScroll()
+
+function createMessageScroll() {
+  return defineComponent({
+    props: {
+      messages: {
+        type: Array as PropType<string[]>,
+        required: true,
+      },
+      messageFormat: {
+        type: Function as PropType<(message: string) => string>,
+        default: (message: string) => message,
+      },
+      ...seamlessScrollProps,
+    },
+    setup(props) {
+      return () => h(SeamlessScroll,
+        { ...props }, {
+          default: h('div', { style: 'white-space: nowrap;', innerHTML: props.messages.map(props.messageFormat).join('') }),
+        })
+    },
+  })
+}
+
+/**
+ * 公告消息滚动
+ */
+export const MessageScroll = createMessageScroll()
