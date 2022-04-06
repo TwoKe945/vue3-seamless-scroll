@@ -1,6 +1,5 @@
 
 <script setup lang="ts">
-import { useNumbers } from '~/composables/random'
 const props = withDefaults(defineProps<{
   length: number
   dir: 'row' | 'column'
@@ -8,8 +7,6 @@ const props = withDefaults(defineProps<{
   length: 3,
   dir: 'column',
 })
-
-const numbers = useNumbers(props.length)
 </script>
 
 <template>
@@ -20,17 +17,12 @@ const numbers = useNumbers(props.length)
     }"
   >
     <div
-      v-for="i in numbers"
+      v-for="i in props.length"
       :key="i"
-      :style="{
-        marginTop: props.dir === 'row' ? '0px' : '5px',
-        marginBottom: props.dir === 'row' ? '0px' : '5px',
-        marginLeft: props.dir === 'row' ? '5px' : '0px',
-        marginRight: props.dir === 'row' ? '5px' : '0px',
-      }"
       rounded="10px"
       h50
       w100
+      m2
       bg-gray-200
       font-mono
       font-size="1.5rem"
