@@ -280,11 +280,11 @@ export function defineTableScroll<T>(
   bodyRowClass = 'table-scroll-row') {
   return defineComponent({
     props: {
+      ...seamlessScrollProps,
       data: {
         type: Array as PropType<T[]>,
         required: true,
       },
-      ...seamlessScrollProps,
     },
     setup(props, ctx) {
       const defaultHeadStyle = {

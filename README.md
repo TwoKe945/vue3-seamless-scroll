@@ -129,9 +129,10 @@ import { defineColumns, defineTableScroll } from '~/composables/scroll-core'
 // 定义表头
 const columns = defineColumns([
   {
-    title: 'Name',
-    key: 'name',
-    width: '100px',
+    title: 'Name', // 显示的标题
+    key: 'name',  // 显示的key
+    width: '100px', // 列宽
+    // style?: {} // 列的公共样式
   },
   {
     title: 'Age',
