@@ -16,6 +16,7 @@ Demo: https://vuescroll-container.netlify.app/
 |  dishover  | 是否启用悬停（鼠标悬停停止滚动） | true  |  Number |
 |  width  |  可视区宽度  |  auto  |  Number |
 |  height  |  可视区高度  |  auto  |  Number |
+|  enable  |  启动滚动  |  true  |  boolean |
 
 # 快速使用
 

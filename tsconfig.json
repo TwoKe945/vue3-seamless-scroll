@@ -7,6 +7,7 @@
     "jsx": "preserve",
     "strict": true,
     "esModuleInterop": true,
+    "declaration": true,
     "incremental": false,
     "skipLibCheck": true,
     "moduleResolution": "node",
@@ -22,5 +23,6 @@
       "~/*": ["src/*"]
     }
   },
-  "exclude": ["dist", "node_modules"]
+  "exclude": ["dist", "node_modules"],
+  "include": ["package", "src"]
 }

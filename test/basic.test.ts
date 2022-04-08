@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { Assert } from '../src/composables/exception'
+import { Assert } from '../package/assert'
 
 describe('Test Assert Utils', () => {
   it('test isTrue(true)', () => {

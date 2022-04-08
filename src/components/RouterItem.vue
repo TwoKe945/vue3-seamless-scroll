@@ -20,5 +20,10 @@
         /table
       </div>
     </router-link>
+    <router-link to="/resize">
+      <div btn ml-5>
+        /resize
+      </div>
+    </router-link>
   </div>
 </template>

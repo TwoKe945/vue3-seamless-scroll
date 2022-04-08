@@ -1,4 +1,4 @@
-export class Assert {
+class Assert {
   public static isTrue(flag: boolean, msg: string): void {
     if (!flag)
       throw new Error(msg)
@@ -36,3 +36,9 @@ export class Assert {
       , msg)
   }
 }
+
+export {
+  Assert,
+}
+
+export default Assert

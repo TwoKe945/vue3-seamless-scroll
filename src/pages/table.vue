@@ -1,22 +1,23 @@
 <script setup lang="ts">
-import type { RowData } from '~/composables/scroll-core'
-import { defineColumns, defineTableScroll } from '~/composables/scroll-core'
+import { ref } from 'vue'
+import type { RowData } from '~/composables'
+import { defineColumns, defineTableScroll } from '~/composables'
 
 const columns = defineColumns([
   {
     title: 'Name',
     key: 'name',
-    width: '100px',
+    width: '40%',
   },
   {
     title: 'Age',
     key: 'age',
-    width: '60px',
+    width: '40%',
   },
   {
     title: 'Group',
     key: 'group',
-    width: '60px',
+    width: '40%',
   },
 ] as const)
 
@@ -46,39 +47,27 @@ const dataArray: TableData[] = [
 ]
 
 const TableScroll = defineTableScroll<TableData>(columns)
-const TableScroll2 = defineTableScroll<TableData>(columns, (key: string, value: any) => {
-  if (key === 'age') {
-    if (value >= 30)
-      return { color: 'red' }
-    else if (value < 30 && value > 20)
-      return { color: 'blue' }
-    else
-      return { color: 'green' }
-  }
-  else if (key === 'group') {
-    if (value === 'A')
-      return { color: 'green' }
-    else if (value === 'B')
-      return { color: 'blue' }
-    else
-      return { color: 'red' }
-  }
-  return {}
-})
 
 const clickItemHandler = function(data: TableData) {
   alert(`点击： ${data.name}`)
 }
 
+const enable = ref(false)
+
 </script>
 <template>
+  <div>
+    <div @click="() => enable = !enable">
+      1111
+    </div>
+  </div>
   <div flex="~ row" justify="center">
-    <TableScroll :data="dataArray" @clickItem="clickItemHandler" />
+    <TableScroll :enable="enable" :data="dataArray" :duration="100" @clickItem="clickItemHandler" />
   </div>
 
-  <div flex="~ row" m5 justify="center">
+  <!-- <div flex="~ row" m5 justify="center">
     <TableScroll2 :data="dataArray" @clickItem="clickItemHandler" />
-  </div>
+  </div> -->
 </template>
 
 <style>
@@ -92,7 +81,6 @@ const clickItemHandler = function(data: TableData) {
 .table-scroll-body {
   background-color: #00000040;
   width:400px !important;
-  padding: 10px 0px;
 }
 
 .table-scroll-row {
