@@ -24,5 +24,6 @@
     }
   },
   "exclude": ["dist", "node_modules"],
-  "include": ["package", "src"]
+  // "include": ["package", "src"],
+  "include": ["package"]
 }
