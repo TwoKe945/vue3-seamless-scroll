@@ -1,7 +1,6 @@
 import type { App } from 'vue';
-import type { RowData } from './scroll-core';
-import { Column, MessageScroll, SeamlessScroll, defineColumns, defineTableScroll } from './scroll-core';
-export * from './exception';
-export type { RowData };
+import { MessageScroll, SeamlessScroll, defineColumns, defineMessageScroll, defineSeamlessScroll, defineTableScroll } from './scroll';
+export type { RowData } from './scroll';
+export * from './types';
 export default function install(app: App): void;
-export { MessageScroll, SeamlessScroll, defineColumns, defineTableScroll, Column, };
+export { MessageScroll, SeamlessScroll, defineSeamlessScroll, defineMessageScroll, defineTableScroll, defineColumns, };

@@ -1,6 +1,6 @@
 {
   "name": "@twoke/seamless-scroll",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "packageManager": "pnpm@6.32.3",
   "main": "./lib/vue3-seamless-scroll.js",
   "module": "./lib/vue3-seamless-scroll.es.js",
@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "build": "vite build",
+    "build:lib": "rollup -c rollup.config.js",
     "dev": "vite --port 3333 --open",
     "lint": "eslint .",
     "typecheck": "vue-tsc --noEmit",
