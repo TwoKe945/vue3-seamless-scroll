@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MessageScroll } from '~/composables/scroll-core'
+import { MessageScroll } from '~/../package/index'
 
 </script>
 

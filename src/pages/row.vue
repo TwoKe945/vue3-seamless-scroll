@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SeamlessScroll } from '~/composables/scroll-core'
+import { SeamlessScroll } from '~/../package/index'
 
 </script>
 <template>

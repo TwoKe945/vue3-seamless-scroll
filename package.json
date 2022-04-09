@@ -57,5 +57,8 @@
   },
   "eslintConfig": {
     "extends": "@antfu"
+  },
+  "dependencies": {
+    "seamscroll": "0.0.12"
   }
 }

@@ -41,7 +41,9 @@ module.exports = {
   ],
   plugins: [
     resolve(),
-    ts2(),
+    ts2({
+      tsconfig: path.resolve(__dirname, './tsconfig.build.json'),
+    }),
     pluginVue(),
     commonjs(),
     postcss(),

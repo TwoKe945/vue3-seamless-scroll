@@ -3,6 +3,7 @@ import { computed, defineComponent, h, nextTick, onMounted, onUnmounted, ref, wa
 import type { ElementSize } from '../types'
 import { Assert } from '../assert'
 import { SCROLL_STRATEGY } from '../strategy'
+import { animationFrame, useRequestAnimation } from '../windows'
 
 export const seamlessScrollProps = {
   to: { // 滚动方向
@@ -25,7 +26,7 @@ export const seamlessScrollProps = {
   },
   sleep: { // 滚动间隔
     type: Number,
-    default: 120,
+    default: 500,
   },
   enable: { // 是否启用滚动
     type: Boolean,
@@ -39,6 +40,7 @@ export function defineSeamlessScroll() {
   return defineComponent({
     props: seamlessScrollProps,
     setup(props, ctx) {
+      animationFrame()
       // 滚动区域
       const rollArea = ref<HTMLDivElement>()
       // 滚动计步数
@@ -50,12 +52,14 @@ export function defineSeamlessScroll() {
       // 初始化
       toggleScroll(props.enable)
       const enableTransition = ref(true)
-      let rollTimer: any
-
+      // 滚动区域大小
       const rect = ref<ElementSize>({ width: 0, height: 0 })
 
       const strategy = SCROLL_STRATEGY.get(props.to)
 
+      const { startAnimation, stopAnimation } = useRequestAnimation(() => {
+        move(strategy!.start(rect.value))
+      })
       /**
        * 检查是否超出边界
        */
@@ -104,23 +108,21 @@ export function defineSeamlessScroll() {
 
       watch(() => props.enable, () => {
         if (props.enable) {
-          rollTimer = setInterval(() => move(strategy!.start(rect.value)), props.duration)
+          startAnimation()
           toggleScroll(true)
         }
         else {
-          if (rollTimer)
-            clearInterval(rollTimer)
+          stopAnimation()
           stepCount.value = strategy!.start(rect.value)
           toggleScroll(false)
         }
       })
 
       async function start() {
-        if (rollTimer) clearTimeout(rollTimer)
         await nextTick()
         initElementSize()
         stepCount.value = strategy!.start(rect.value)
-        rollTimer = setInterval(() => move(strategy!.start(rect.value)), props.duration)
+        startAnimation()
       }
 
       onMounted(async() => {
@@ -129,8 +131,7 @@ export function defineSeamlessScroll() {
       })
 
       onUnmounted(() => {
-        if (rollTimer)
-          clearInterval(rollTimer)
+        stopAnimation()
         stopWatchRollArea()
         stopWatchRect()
         window.removeEventListener('resize', start)
@@ -149,6 +150,14 @@ export function defineSeamlessScroll() {
           }
       })
 
+      /*
+        <div>
+          <div>
+            <div>
+            <div>
+          </div>
+        </div>
+      */
       return () => {
         const slot = ctx.slots.default?.()
         Assert.notEmpty(slot, 'SeamlessScroll: You must provide a default slot')

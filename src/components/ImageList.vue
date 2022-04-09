@@ -7,7 +7,6 @@ const props = withDefaults(defineProps<{
   length: 3,
   dir: 'column',
 })
-
 </script>
 
 <template>
@@ -35,9 +34,13 @@ const props = withDefaults(defineProps<{
       text-blue
       hover="cursor-pointer"
     >
-      <img
+      <!-- <img
         w-full h-full
         rounded="10px" :src="`https://picsum.photos/seed/img-${Math.floor(i)}/400/200`" alt=""
+      > -->
+      <img
+        w-full h-full
+        rounded="10px" src="../assert/1.jpg" alt=""
       >
     </div>
   </div>

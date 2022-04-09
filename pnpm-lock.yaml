@@ -25,6 +25,7 @@ specifiers:
   rollup-plugin-typescript2: ^0.31.2
   rollup-plugin-uglify: ^6.0.4
   rollup-plugin-vue: ^6.0.0
+  seamscroll: 0.0.12
   typescript: ^4.6.3
   unocss: ^0.30.8
   unplugin-auto-import: ^0.6.8
@@ -37,6 +38,9 @@ specifiers:
   vue: ^3.2.31
   vue-router: ^4.0.14
   vue-tsc: ^0.33.9
+
+dependencies:
+  seamscroll: 0.0.12
 
 devDependencies:
   '@antfu/eslint-config': 0.19.1_eslint@8.12.0+typescript@4.6.3
@@ -1555,6 +1559,10 @@ packages:
   /commondir/1.0.1:
     resolution: {integrity: sha1-3dgA2gxmEnOTzKWVDqloo6rxJTs=}
     dev: true
+
+  /comutils/1.1.19:
+    resolution: {integrity: sha512-JxXB67juILiwhdLwOsYyjUqwWEhHdObI0EClOPk+JDtEuTbac59s0pxGpfCBnNNQ5JommifmcMGneW/4Cg7YWw==}
+    dev: false
 
   /concat-map/0.0.1:
     resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
@@ -4581,6 +4589,12 @@ packages:
     dependencies:
       xmlchars: 2.2.0
     dev: true
+
+  /seamscroll/0.0.12:
+    resolution: {integrity: sha512-HCfipsYpzHOK+m8A4IcC5HWon7mmzSksvHmQ/L+dA13gP5DVj/i93T0QpumFslGstPFOHP2UWttnYnZZG8ySWw==}
+    dependencies:
+      comutils: 1.1.19
+    dev: false
 
   /section-matter/1.0.0:
     resolution: {integrity: sha512-vfD3pmTzGpufjScBh50YHKzEu2lxBWhVEHsNGoEXmCmn2hKGfeNLYMzCJpe8cD7gqX7TJluOVpBkAequ6dgMmA==}
