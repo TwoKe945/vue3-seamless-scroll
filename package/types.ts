@@ -22,3 +22,38 @@ export interface Column {
   width: string // 列宽度
   style?: any // 列样式
 }
+
+/**
+ * 可视区域大小
+ */
+export interface ViewPort {
+  width: string
+  height: string
+}
+
+/**
+ * 滚动的容器数据
+ */
+export interface Container {
+  el: HTMLDivElement // 滚动容器的dom元素
+  width: number
+  height: number
+}
+
+/**
+ * 滚动的内容数据
+ */
+export interface Content {
+  el: HTMLDivElement // 滚动内容的dom元素
+  width: number
+  height: number
+}
+
+/**
+ * 滚动组件的全局上下文
+ */
+export interface Context {
+  container: Container
+  content: Content
+  viewport: ViewPort // 可视区域
+}

@@ -12,11 +12,14 @@ Demo: https://vuescroll-container.netlify.app/
 | **属性名** | **描述** | **默认值** |  **类型** |
 |:---|:---|:---|:---|
 |  to  |  滚动方向  | top  |  'top'\|'bottom'\|'left'\|'right' |
-|  duration  |  动画时间：  | 17 (1秒 60次) |  Number |
 |  dishover  | 是否启用悬停（鼠标悬停停止滚动） | true  |  Number |
 |  width  |  可视区宽度  |  auto  |  Number |
 |  height  |  可视区高度  |  auto  |  Number |
 |  enable  |  启动滚动  |  true  |  boolean |
+
+| **方法** | **描述** | **默认值** |  **类型** |
+|:---|:---|:---|:---|
+|  updateData  |  更新数据  | 无  |  (fn: () => void ) => void |
 
 # 快速使用
 
@@ -28,9 +31,7 @@ import { SeamlessScroll } from '~/composables/scroll-core'
 </script>
 
 <template>
-  <SeamlessScroll
-    :duration="40" // 默认向上运动
-  >
+  <SeamlessScroll>
   <!-- 图片显示以列的形式展示 -->
     <ImageList :length="3" dir="column" /> 
   </SeamlessScroll>
@@ -108,7 +109,7 @@ import { MessageScroll
   <MessageScroll
     :messages="['xxxx', 'yyyy', 'zzzz']"
     :message-format="message => `${message}... &nbsp;&nbsp;`"
-    to="left" :duration="50"
+    to="left"
   />
 </template>
 ```

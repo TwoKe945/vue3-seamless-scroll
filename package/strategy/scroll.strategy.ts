@@ -12,9 +12,9 @@ class ScrollToTopStrategy implements ScrollStrategy {
     return ScrollStrategyType.TOP
   }
 
-  public style(step: number) {
+  public style(move: number) {
     return {
-      transform: `translateY(-${step}px)`,
+      top: `-${move}px`,
       flexDirection: 'column',
     }
   }
@@ -34,9 +34,9 @@ class ScrollToBottomStrategy implements ScrollStrategy {
     return ScrollStrategyType.BOTTOM
   }
 
-  public style(step: number) {
+  public style(move: number) {
     return {
-      transform: `translateY(${step}px)`,
+      top: `${move}px`,
       flexDirection: 'column',
     }
   }
@@ -56,15 +56,15 @@ class ScrollToLeftStrategy implements ScrollStrategy {
     return ScrollStrategyType.LEFT
   }
 
-  public style(step: number) {
+  public style(move: number) {
     return {
-      transform: `translateX(-${step}px)`,
+      left: `-${move}px`,
       flexDirection: 'row',
     }
   }
 
   public isOverflow(stepCount: number, size: ElementSize) {
-    return Math.abs(stepCount) >= size.height
+    return Math.abs(stepCount) >= size.width
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -78,9 +78,9 @@ class ScrollToRightStrategy implements ScrollStrategy {
     return ScrollStrategyType.RIGHT
   }
 
-  public style(step: number) {
+  public style(move: number) {
     return {
-      transform: `translateX(${step}px)`,
+      left: `${move}px`,
       flexDirection: 'row',
     }
   }

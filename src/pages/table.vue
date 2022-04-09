@@ -7,17 +7,17 @@ const columns = defineColumns([
   {
     title: 'Name',
     key: 'name',
-    width: '40%',
+    width: '5vw',
   },
   {
     title: 'Age',
     key: 'age',
-    width: '40%',
+    width: '5vw',
   },
   {
     title: 'Group',
     key: 'group',
-    width: '40%',
+    width: '5vw',
   },
 ] as const)
 
@@ -62,12 +62,8 @@ const enable = ref(false)
     </div>
   </div>
   <div flex="~ row" justify="center">
-    <TableScroll :enable="enable" :data="dataArray" :duration="100" @clickItem="clickItemHandler" />
+    <TableScroll :enable="enable" width="400px" :data="dataArray" @clickItem="clickItemHandler" />
   </div>
-
-  <!-- <div flex="~ row" m5 justify="center">
-    <TableScroll2 :data="dataArray" @clickItem="clickItemHandler" />
-  </div> -->
 </template>
 
 <style>
@@ -80,7 +76,6 @@ const enable = ref(false)
 }
 .table-scroll-body {
   background-color: #00000040;
-  width:400px !important;
 }
 
 .table-scroll-row {

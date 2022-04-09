@@ -22,10 +22,6 @@ export declare function defineTableScroll<T>(columns: readonly Column[], formatS
         type: PropType<"top" | "left" | "bottom" | "right">;
         default: string;
     };
-    duration: {
-        type: NumberConstructor;
-        default: number;
-    };
     dishover: {
         type: BooleanConstructor;
         default: boolean;
@@ -35,10 +31,6 @@ export declare function defineTableScroll<T>(columns: readonly Column[], formatS
     };
     height: {
         type: StringConstructor;
-    };
-    sleep: {
-        type: NumberConstructor;
-        default: number;
     };
     enable: {
         type: BooleanConstructor;
@@ -55,10 +47,6 @@ export declare function defineTableScroll<T>(columns: readonly Column[], formatS
         type: PropType<"top" | "left" | "bottom" | "right">;
         default: string;
     };
-    duration: {
-        type: NumberConstructor;
-        default: number;
-    };
     dishover: {
         type: BooleanConstructor;
         default: boolean;
@@ -69,18 +57,12 @@ export declare function defineTableScroll<T>(columns: readonly Column[], formatS
     height: {
         type: StringConstructor;
     };
-    sleep: {
-        type: NumberConstructor;
-        default: number;
-    };
     enable: {
         type: BooleanConstructor;
         default: boolean;
     };
 }>>, {
     to: "top" | "left" | "bottom" | "right";
-    duration: number;
     dishover: boolean;
-    sleep: number;
     enable: boolean;
 }>;

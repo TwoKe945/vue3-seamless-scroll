@@ -59,36 +59,48 @@ export function getStyle(dom: HTMLElement, style: any) {
 
 export function useRequestAnimation(fn: () => void, enableTimeout = false, delay = 1000 / 60) {
   animationFrame()
-  const framId = ref(-127)
-  const timerId = ref(-127)
+  const framId = ref<any>(null)
+  const timerId = ref<any>(null)
+  const running = ref(false)
+
+  function clearTimer() {
+    if (timerId.value) {
+      clearTimeout(timerId.value)
+      timerId.value = null
+    }
+  }
+
+  function clearAnimation() {
+    if (framId.value) {
+      cancelAnimationFrame(framId.value)
+      framId.value = null
+    }
+  }
 
   const startAnimation = async function() {
-    if (framId.value !== -127) cancelAnimationFrame(framId.value)
+    clearAnimation()
     framId.value = requestAnimationFrame(() => {
       fn()
       if (enableTimeout) {
-        if (timerId.value !== -127) clearTimeout(timerId.value)
+        clearTimer()
         timerId.value = setTimeout(() => startAnimation(), delay)
       }
       else {
         startAnimation()
       }
     })
+    running.value = true
   }
 
   const stopAnimation = function() {
-    if (framId.value === -127) return
-    cancelAnimationFrame(framId.value)
-    framId.value = -127
-    if (enableTimeout) {
-      if (timerId.value === -127) return
-      clearTimeout(timerId.value)
-      timerId.value = -127
-    }
+    clearAnimation()
+    if (enableTimeout)
+      clearTimer()
   }
 
   return {
     startAnimation,
     stopAnimation,
+    running,
   }
 }

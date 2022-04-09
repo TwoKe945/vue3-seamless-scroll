@@ -1,18 +1,13 @@
 import type { ExtractPropTypes, PropType } from 'vue'
 import { computed, defineComponent, h, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
-import type { ElementSize } from '../types'
 import { Assert } from '../assert'
 import { SCROLL_STRATEGY } from '../strategy'
-import { animationFrame, useRequestAnimation } from '../windows'
+import { useAutoDOM, useContext, useRequestAnimation } from '../composable'
 
 export const seamlessScrollProps = {
   to: { // 滚动方向
     type: String as PropType<'top' | 'left' | 'bottom' | 'right'>,
     default: 'top',
-  },
-  duration: { // 动画时间帧数 1 秒 60 次
-    type: Number,
-    default: 17,
   },
   dishover: { // 是否启用悬停
     type: Boolean,
@@ -24,10 +19,6 @@ export const seamlessScrollProps = {
   height: { // 可视窗口高度
     type: String,
   },
-  sleep: { // 滚动间隔
-    type: Number,
-    default: 500,
-  },
   enable: { // 是否启用滚动
     type: Boolean,
     default: true,
@@ -38,73 +29,87 @@ export type SeamlessScrollProps = ExtractPropTypes<typeof seamlessScrollProps>
 
 export function defineSeamlessScroll() {
   return defineComponent({
+    /**
+     * 滚动区域的参数
+     */
     props: seamlessScrollProps,
     setup(props, ctx) {
-      animationFrame()
-      // 滚动区域
-      const rollArea = ref<HTMLDivElement>()
-      // 滚动计步数
-      const stepCount = ref()
+      const { viewportConfig, setContainer, setContent, setViewPort, containerConfig } = useContext()
+      const moveLength = ref(0) // 移动的长度
+      // 定义滚动容器和内容dom
+      const containerRef = ref<HTMLDivElement>()
+      const contentRef = ref<HTMLDivElement>()
+
+      const containerRefStyle = ref({})
+      const contentRefStyle = ref({})
+
+      // 容器根据内容自适应
+      useAutoDOM(contentRef, (el, width, height) => {
+        setContent({
+          el: contentRef.value as HTMLDivElement,
+          width,
+          height: height * 2,
+        })
+        setContainer({
+          el: containerRef.value as HTMLDivElement,
+          width,
+          height,
+        })
+        setViewPort({
+          width: props.width || `${width}px`,
+          height: props.height || `${height}px`,
+        })
+        contentRefStyle.value = {
+          width: props.width || `${width}px`,
+          height: props.height || `${height * 2}px`,
+        }
+      })
+
+      const stopWatchViewport = watch(viewportConfig, (value) => {
+        containerRefStyle.value = {
+          width: value.width,
+          height: value.height,
+        }
+      })
+
+      // 默认样式
+      const defaultcontainerRefStyle = {
+        position: 'relative',
+        overflow: 'hidden',
+      }
+      const defaultContentStyle = {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+      }
+
       const scrolling = ref(true)
       const toggleScroll = function(flag: boolean) {
         scrolling.value = flag
       }
-      // 初始化
+
+      // 初始化滚动状态
       toggleScroll(props.enable)
-      const enableTransition = ref(true)
-      // 滚动区域大小
-      const rect = ref<ElementSize>({ width: 0, height: 0 })
 
       const strategy = SCROLL_STRATEGY.get(props.to)
 
       const { startAnimation, stopAnimation } = useRequestAnimation(() => {
-        move(strategy!.start(rect.value))
+        move(strategy!.start(containerConfig.value))
       })
       /**
        * 检查是否超出边界
        */
-      const isOverflow = computed(() => strategy!.isOverflow(stepCount.value, rect.value))
+      const isOverflow = computed(() => strategy!.isOverflow(moveLength.value, containerConfig.value))
       /**
        * 移动
        */
       function move(startStep = 0) {
-        if (!scrolling.value) return
-        if (isOverflow.value) {
-          enableTransition.value = false
-          stepCount.value = startStep
-          const timer = setTimeout(() => {
-            enableTransition.value = true
-            clearTimeout(timer)
-          }, props.sleep)
-        }
-        stepCount.value += 1
+        if (!scrolling.value)
+          return
+        if (isOverflow.value)
+          moveLength.value = startStep
+        moveLength.value += 1
       }
-
-      const rollContainerStyle = ref({})
-
-      /**
-       * 初始化元素尺寸
-       */
-      function initElementSize() {
-        const dom = rollArea.value?.children[0] as HTMLElement
-        const width = dom?.offsetWidth as number
-        const height = dom?.offsetHeight as number
-        rect.value = { width, height }
-      }
-
-      const stopWatchRollArea = watch(rollArea, () => initElementSize())
-
-      const stopWatchRect = watch(rect, (value) => {
-        const style = {
-          overflow: 'hidden',
-          width: props.width || `${value.width}px`,
-          height: props.height || `${value.height}px`,
-        }
-        rollContainerStyle.value = {
-          ...rollContainerStyle.value,
-          ...style,
-        }
-      })
 
       watch(() => props.enable, () => {
         if (props.enable) {
@@ -113,51 +118,48 @@ export function defineSeamlessScroll() {
         }
         else {
           stopAnimation()
-          stepCount.value = strategy!.start(rect.value)
+          moveLength.value = strategy!.start(containerConfig.value)
           toggleScroll(false)
         }
+      }, {
+        immediate: true,
       })
 
-      async function start() {
-        await nextTick()
-        initElementSize()
-        stepCount.value = strategy!.start(rect.value)
-        startAnimation()
+      const isUpdate = ref(false)
+      let updateTimer: any
+      function updateData(fn: () => void) {
+        isUpdate.value = true
+        if (updateTimer) clearTimeout(updateTimer)
+        updateTimer = setTimeout(() => {
+          fn()
+          isUpdate.value = false
+        }, 5)
       }
 
       onMounted(async() => {
-        start()
-        window.addEventListener('resize', start)
+        await nextTick()
+        moveLength.value = strategy!.start(containerConfig.value)
+        startAnimation()
       })
 
       onUnmounted(() => {
         stopAnimation()
-        stopWatchRollArea()
-        stopWatchRect()
-        window.removeEventListener('resize', start)
+        stopWatchViewport()
+        if (updateTimer) clearTimeout(updateTimer)
       })
 
-      const style = computed(() => {
-        return enableTransition.value
-          ? {
-            transition: `all ${props.duration}ms`,
-            display: 'flex',
-            ...strategy!.style(stepCount.value),
-          }
-          : {
-            display: 'flex',
-            ...strategy!.style(stepCount.value),
-          }
+      ctx.expose({
+        updateData,
       })
 
-      /*
-        <div>
-          <div>
-            <div>
-            <div>
-          </div>
-        </div>
-      */
+      const contentStyle = computed(() => {
+        return {
+          transition: 'all 16ms inherit',
+          display: 'flex',
+          ...contentRefStyle.value,
+          ...strategy!.style(moveLength.value),
+        }
+      })
       return () => {
         const slot = ctx.slots.default?.()
         Assert.notEmpty(slot, 'SeamlessScroll: You must provide a default slot')
@@ -167,18 +169,30 @@ export function defineSeamlessScroll() {
         const compChildren = slot![0].children as any
 
         return h('div', {
-          style: rollContainerStyle.value,
+          class: 'seamless-scroll-container',
+          ref: containerRef,
+          style: {
+            ...defaultcontainerRefStyle,
+            ...containerRefStyle.value,
+          },
           onMouseover: () => props.enable && props.dishover && toggleScroll(false),
           onMouseout: () => props.enable && props.dishover && toggleScroll(true),
         },
         h('div', {
-          ref: rollArea,
-          style: style.value,
+          class: 'seamless-scroll-content',
+          ref: contentRef,
+          style: {
+            ...defaultContentStyle,
+            ...contentStyle.value,
+          },
         },
-        [
-          h(Comp, { ...compProps }, compChildren),
-          h(Comp, { ...compProps }, compChildren),
-        ]))
+        isUpdate.value
+          ? []
+          : [
+            h(Comp, { ...compProps }, compChildren),
+            h(Comp, { ...compProps }, compChildren),
+          ],
+        ))
       }
     },
   })

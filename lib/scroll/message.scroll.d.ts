@@ -12,10 +12,6 @@ declare const messageScrollProps: {
         type: PropType<"top" | "left" | "bottom" | "right">;
         default: string;
     };
-    duration: {
-        type: NumberConstructor;
-        default: number;
-    };
     dishover: {
         type: BooleanConstructor;
         default: boolean;
@@ -25,10 +21,6 @@ declare const messageScrollProps: {
     };
     height: {
         type: StringConstructor;
-    };
-    sleep: {
-        type: NumberConstructor;
-        default: number;
     };
     enable: {
         type: BooleanConstructor;
@@ -49,10 +41,6 @@ export declare function defineMessageScroll(): import("vue").DefineComponent<{
         type: PropType<"top" | "left" | "bottom" | "right">;
         default: string;
     };
-    duration: {
-        type: NumberConstructor;
-        default: number;
-    };
     dishover: {
         type: BooleanConstructor;
         default: boolean;
@@ -62,10 +50,6 @@ export declare function defineMessageScroll(): import("vue").DefineComponent<{
     };
     height: {
         type: StringConstructor;
-    };
-    sleep: {
-        type: NumberConstructor;
-        default: number;
     };
     enable: {
         type: BooleanConstructor;
@@ -86,10 +70,6 @@ export declare function defineMessageScroll(): import("vue").DefineComponent<{
         type: PropType<"top" | "left" | "bottom" | "right">;
         default: string;
     };
-    duration: {
-        type: NumberConstructor;
-        default: number;
-    };
     dishover: {
         type: BooleanConstructor;
         default: boolean;
@@ -100,10 +80,6 @@ export declare function defineMessageScroll(): import("vue").DefineComponent<{
     height: {
         type: StringConstructor;
     };
-    sleep: {
-        type: NumberConstructor;
-        default: number;
-    };
     enable: {
         type: BooleanConstructor;
         default: boolean;
@@ -111,9 +87,7 @@ export declare function defineMessageScroll(): import("vue").DefineComponent<{
 }>>, {
     messageFormat: (message: string) => string;
     to: "top" | "left" | "bottom" | "right";
-    duration: number;
     dishover: boolean;
-    sleep: number;
     enable: boolean;
 }>;
 /**
@@ -132,10 +106,6 @@ export declare const MessageScroll: import("vue").DefineComponent<{
         type: PropType<"top" | "left" | "bottom" | "right">;
         default: string;
     };
-    duration: {
-        type: NumberConstructor;
-        default: number;
-    };
     dishover: {
         type: BooleanConstructor;
         default: boolean;
@@ -145,10 +115,6 @@ export declare const MessageScroll: import("vue").DefineComponent<{
     };
     height: {
         type: StringConstructor;
-    };
-    sleep: {
-        type: NumberConstructor;
-        default: number;
     };
     enable: {
         type: BooleanConstructor;
@@ -169,10 +135,6 @@ export declare const MessageScroll: import("vue").DefineComponent<{
         type: PropType<"top" | "left" | "bottom" | "right">;
         default: string;
     };
-    duration: {
-        type: NumberConstructor;
-        default: number;
-    };
     dishover: {
         type: BooleanConstructor;
         default: boolean;
@@ -183,10 +145,6 @@ export declare const MessageScroll: import("vue").DefineComponent<{
     height: {
         type: StringConstructor;
     };
-    sleep: {
-        type: NumberConstructor;
-        default: number;
-    };
     enable: {
         type: BooleanConstructor;
         default: boolean;
@@ -194,9 +152,7 @@ export declare const MessageScroll: import("vue").DefineComponent<{
 }>>, {
     messageFormat: (message: string) => string;
     to: "top" | "left" | "bottom" | "right";
-    duration: number;
     dishover: boolean;
-    sleep: number;
     enable: boolean;
 }>;
 export {};

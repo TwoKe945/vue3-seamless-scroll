@@ -25,3 +25,34 @@ export interface Column {
     width: string;
     style?: any;
 }
+/**
+ * 可视区域大小
+ */
+export interface ViewPort {
+    width: string;
+    height: string;
+}
+/**
+ * 滚动的容器数据
+ */
+export interface Container {
+    el: HTMLDivElement;
+    width: number;
+    height: number;
+}
+/**
+ * 滚动的内容数据
+ */
+export interface Content {
+    el: HTMLDivElement;
+    width: number;
+    height: number;
+}
+/**
+ * 滚动组件的全局上下文
+ */
+export interface Context {
+    container: Container;
+    content: Content;
+    viewport: ViewPort;
+}

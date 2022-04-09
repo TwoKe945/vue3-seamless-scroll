@@ -4,10 +4,6 @@ export declare const seamlessScrollProps: {
         type: PropType<"top" | "left" | "bottom" | "right">;
         default: string;
     };
-    duration: {
-        type: NumberConstructor;
-        default: number;
-    };
     dishover: {
         type: BooleanConstructor;
         default: boolean;
@@ -17,10 +13,6 @@ export declare const seamlessScrollProps: {
     };
     height: {
         type: StringConstructor;
-    };
-    sleep: {
-        type: NumberConstructor;
-        default: number;
     };
     enable: {
         type: BooleanConstructor;
@@ -33,10 +25,6 @@ export declare function defineSeamlessScroll(): import("vue").DefineComponent<{
         type: PropType<"top" | "left" | "bottom" | "right">;
         default: string;
     };
-    duration: {
-        type: NumberConstructor;
-        default: number;
-    };
     dishover: {
         type: BooleanConstructor;
         default: boolean;
@@ -46,10 +34,6 @@ export declare function defineSeamlessScroll(): import("vue").DefineComponent<{
     };
     height: {
         type: StringConstructor;
-    };
-    sleep: {
-        type: NumberConstructor;
-        default: number;
     };
     enable: {
         type: BooleanConstructor;
@@ -62,10 +46,6 @@ export declare function defineSeamlessScroll(): import("vue").DefineComponent<{
         type: PropType<"top" | "left" | "bottom" | "right">;
         default: string;
     };
-    duration: {
-        type: NumberConstructor;
-        default: number;
-    };
     dishover: {
         type: BooleanConstructor;
         default: boolean;
@@ -76,19 +56,13 @@ export declare function defineSeamlessScroll(): import("vue").DefineComponent<{
     height: {
         type: StringConstructor;
     };
-    sleep: {
-        type: NumberConstructor;
-        default: number;
-    };
     enable: {
         type: BooleanConstructor;
         default: boolean;
     };
 }>>, {
     to: "top" | "left" | "bottom" | "right";
-    duration: number;
     dishover: boolean;
-    sleep: number;
     enable: boolean;
 }>;
 /**
@@ -99,10 +73,6 @@ export declare const SeamlessScroll: import("vue").DefineComponent<{
         type: PropType<"top" | "left" | "bottom" | "right">;
         default: string;
     };
-    duration: {
-        type: NumberConstructor;
-        default: number;
-    };
     dishover: {
         type: BooleanConstructor;
         default: boolean;
@@ -112,10 +82,6 @@ export declare const SeamlessScroll: import("vue").DefineComponent<{
     };
     height: {
         type: StringConstructor;
-    };
-    sleep: {
-        type: NumberConstructor;
-        default: number;
     };
     enable: {
         type: BooleanConstructor;
@@ -128,10 +94,6 @@ export declare const SeamlessScroll: import("vue").DefineComponent<{
         type: PropType<"top" | "left" | "bottom" | "right">;
         default: string;
     };
-    duration: {
-        type: NumberConstructor;
-        default: number;
-    };
     dishover: {
         type: BooleanConstructor;
         default: boolean;
@@ -142,18 +104,12 @@ export declare const SeamlessScroll: import("vue").DefineComponent<{
     height: {
         type: StringConstructor;
     };
-    sleep: {
-        type: NumberConstructor;
-        default: number;
-    };
     enable: {
         type: BooleanConstructor;
         default: boolean;
     };
 }>>, {
     to: "top" | "left" | "bottom" | "right";
-    duration: number;
     dishover: boolean;
-    sleep: number;
     enable: boolean;
 }>;
