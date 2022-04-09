@@ -1,6 +1,6 @@
 {
   "name": "@twoke/seamless-scroll",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "packageManager": "pnpm@6.32.3",
   "main": "./lib/vue3-seamless-scroll.js",
   "module": "./lib/vue3-seamless-scroll.es.js",

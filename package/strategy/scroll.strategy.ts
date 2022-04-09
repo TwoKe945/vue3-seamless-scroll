@@ -33,7 +33,11 @@ class ScrollToTopStrategy implements ScrollStrategy {
   }
 
   contentWidth(size: ElementSize, input: string) {
-    return input || `${size.height}px`
+    return input || `${size.width}px`
+  }
+
+  overContent(size: ElementSize, viewport: ElementSize) {
+    return size.height >= viewport.height
   }
 }
 
@@ -63,7 +67,11 @@ class ScrollToBottomStrategy implements ScrollStrategy {
   }
 
   contentWidth(size: ElementSize, input: string) {
-    return input || `${size.height}px`
+    return input || `${size.width}px`
+  }
+
+  overContent(size: ElementSize, viewport: ElementSize) {
+    return size.height >= viewport.height
   }
 }
 
@@ -95,6 +103,10 @@ class ScrollToLeftStrategy implements ScrollStrategy {
   contentWidth(size: ElementSize) {
     return `${size.width}px`
   }
+
+  overContent(size: ElementSize, viewport: ElementSize) {
+    return size.width >= viewport.width
+  }
 }
 
 class ScrollToRightStrategy implements ScrollStrategy {
@@ -124,6 +136,10 @@ class ScrollToRightStrategy implements ScrollStrategy {
 
   contentWidth(size: ElementSize) {
     return `${size.width}px`
+  }
+
+  overContent(size: ElementSize, viewport: ElementSize) {
+    return size.width >= viewport.width
   }
 }
 

@@ -16,6 +16,7 @@ export interface ScrollStrategy {
   start: (size: ElementSize) => number
   contentHeight: (size: ElementSize, input: string) => string
   contentWidth: (size: ElementSize, input: string) => string
+  overContent: (size: ElementSize, viewport: ElementSize) => boolean
 }
 
 export interface Column {
