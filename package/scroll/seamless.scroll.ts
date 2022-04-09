@@ -2,7 +2,8 @@ import type { ExtractPropTypes, PropType } from 'vue'
 import { computed, defineComponent, h, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { Assert } from '../assert'
 import { SCROLL_STRATEGY } from '../strategy'
-import { useAutoDOM, useContext, useRequestAnimation } from '../composable'
+import { getStyle, useAutoDOM, useContext, useRequestAnimation } from '../composable'
+import { getRealNumber } from '../composable/useRequestAnimation'
 
 export const seamlessScrollProps = {
   to: { // 滚动方向
@@ -44,6 +45,7 @@ export function defineSeamlessScroll() {
       const contentRefStyle = ref({})
 
       const strategy = SCROLL_STRATEGY.get(props.to)
+      const viewport = ref({ width: 0, height: 0 })
 
       // 容器根据内容自适应
       useAutoDOM(contentRef, (el, width, height) => {
@@ -73,6 +75,15 @@ export function defineSeamlessScroll() {
           height: value.height,
         }
       })
+      watch(containerRefStyle, async() => {
+        await nextTick()
+        viewport.value = {
+          width: getRealNumber(getStyle(containerRef.value as HTMLElement, 'width')),
+          height: getRealNumber(getStyle(containerRef.value as HTMLElement, 'height')),
+        }
+      })
+
+      const enableMove = computed(() => props.enable && strategy?.overContent(containerConfig.value, viewport.value) as boolean)
 
       // 默认样式
       const defaultcontainerRefStyle = {
@@ -91,7 +102,7 @@ export function defineSeamlessScroll() {
       }
 
       // 初始化滚动状态
-      toggleScroll(props.enable)
+      toggleScroll(enableMove.value)
 
       const { startAnimation, stopAnimation } = useRequestAnimation(() => {
         move(strategy!.start(containerConfig.value))
@@ -112,7 +123,7 @@ export function defineSeamlessScroll() {
       }
 
       watch(() => props.enable, () => {
-        if (props.enable) {
+        if (enableMove.value) {
           startAnimation()
           toggleScroll(true)
         }
@@ -175,8 +186,8 @@ export function defineSeamlessScroll() {
             ...defaultcontainerRefStyle,
             ...containerRefStyle.value,
           },
-          onMouseover: () => props.enable && props.dishover && toggleScroll(false),
-          onMouseout: () => props.enable && props.dishover && toggleScroll(true),
+          onMouseover: () => enableMove.value && props.dishover && toggleScroll(false),
+          onMouseout: () => enableMove.value && props.dishover && toggleScroll(true),
         },
         h('div', {
           class: 'seamless-scroll-content',
@@ -188,10 +199,13 @@ export function defineSeamlessScroll() {
         },
         isUpdate.value
           ? []
-          : [
-            h(Comp, { ...compProps }, compChildren),
-            h(Comp, { ...compProps }, compChildren),
-          ],
+          : (strategy?.overContent(containerConfig.value, viewport.value)
+            ? [h(Comp, { ...compProps }, compChildren),
+              h(Comp, { ...compProps }, compChildren)]
+            : [
+              h(Comp, { ...compProps }, compChildren),
+            ])
+          ,
         ))
       }
     },
