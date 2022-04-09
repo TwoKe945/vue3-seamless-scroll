@@ -27,6 +27,14 @@ class ScrollToTopStrategy implements ScrollStrategy {
   public start(size: ElementSize) {
     return 0
   }
+
+  contentHeight(size: ElementSize) {
+    return `${size.height}px`
+  }
+
+  contentWidth(size: ElementSize, input: string) {
+    return input || `${size.height}px`
+  }
 }
 
 class ScrollToBottomStrategy implements ScrollStrategy {
@@ -48,6 +56,14 @@ class ScrollToBottomStrategy implements ScrollStrategy {
 
   public start(size: ElementSize) {
     return 0 - size.height
+  }
+
+  contentHeight(size: ElementSize) {
+    return `${size.height}px`
+  }
+
+  contentWidth(size: ElementSize, input: string) {
+    return input || `${size.height}px`
   }
 }
 
@@ -71,6 +87,14 @@ class ScrollToLeftStrategy implements ScrollStrategy {
   public start(size: ElementSize) {
     return 0
   }
+
+  contentHeight(size: ElementSize, input: string) {
+    return input || `${size.height}px`
+  }
+
+  contentWidth(size: ElementSize) {
+    return `${size.width}px`
+  }
 }
 
 class ScrollToRightStrategy implements ScrollStrategy {
@@ -92,6 +116,14 @@ class ScrollToRightStrategy implements ScrollStrategy {
 
   public start(size: ElementSize) {
     return 0 - size.width
+  }
+
+  contentHeight(size: ElementSize, input: string) {
+    return input || `${size.height}px`
+  }
+
+  contentWidth(size: ElementSize) {
+    return `${size.width}px`
   }
 }
 

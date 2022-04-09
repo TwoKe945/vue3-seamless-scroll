@@ -56,9 +56,9 @@ const enable = ref(false)
 
 </script>
 <template>
-  <div>
-    <div @click="() => enable = !enable">
-      1111
+  <div m2>
+    <div btn @click="() => enable = !enable">
+      {{ enable ? '暂停' : '激活' }}
     </div>
   </div>
   <div flex="~ row" justify="center">

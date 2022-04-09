@@ -34,7 +34,7 @@ export function defineSeamlessScroll() {
      */
     props: seamlessScrollProps,
     setup(props, ctx) {
-      const { viewportConfig, setContainer, setContent, setViewPort, containerConfig } = useContext()
+      const { viewportConfig, setContainer, setContent, setViewPort, containerConfig, contentConfig } = useContext()
       const moveLength = ref(0) // 移动的长度
       // 定义滚动容器和内容dom
       const containerRef = ref<HTMLDivElement>()
@@ -42,6 +42,8 @@ export function defineSeamlessScroll() {
 
       const containerRefStyle = ref({})
       const contentRefStyle = ref({})
+
+      const strategy = SCROLL_STRATEGY.get(props.to)
 
       // 容器根据内容自适应
       useAutoDOM(contentRef, (el, width, height) => {
@@ -60,8 +62,8 @@ export function defineSeamlessScroll() {
           height: props.height || `${height}px`,
         })
         contentRefStyle.value = {
-          width: props.width || `${width}px`,
-          height: props.height || `${height * 2}px`,
+          width: strategy?.contentWidth(contentConfig.value, props.width as string),
+          height: strategy?.contentHeight(contentConfig.value, props.height as string),
         }
       })
 
@@ -90,8 +92,6 @@ export function defineSeamlessScroll() {
 
       // 初始化滚动状态
       toggleScroll(props.enable)
-
-      const strategy = SCROLL_STRATEGY.get(props.to)
 
       const { startAnimation, stopAnimation } = useRequestAnimation(() => {
         move(strategy!.start(containerConfig.value))
@@ -154,7 +154,7 @@ export function defineSeamlessScroll() {
 
       const contentStyle = computed(() => {
         return {
-          transition: 'all 16ms inherit',
+          transition: 'all 16ms linear',
           display: 'flex',
           ...contentRefStyle.value,
           ...strategy!.style(moveLength.value),

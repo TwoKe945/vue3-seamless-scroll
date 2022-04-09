@@ -14,6 +14,8 @@ export interface ScrollStrategy {
   style: (step: number) => { transform?: string; flexDirection?: string; width?: string; height?: string }
   isOverflow: (stepCount: number, size: ElementSize) => boolean
   start: (size: ElementSize) => number
+  contentHeight: (size: ElementSize, input: string) => string
+  contentWidth: (size: ElementSize, input: string) => string
 }
 
 export interface Column {
