@@ -62,7 +62,7 @@ const enable = ref(false)
     </div>
   </div>
   <div flex="~ row" justify="center">
-    <TableScroll :enable="enable" width="400px" height="30vh" :data="dataArray" @clickItem="clickItemHandler" />
+    <TableScroll :enable="enable" width="400px" height="10vh" :data="dataArray" @clickItem="clickItemHandler" />
   </div>
 </template>
 

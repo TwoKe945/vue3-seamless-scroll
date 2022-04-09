@@ -3,7 +3,9 @@
 .vite-ssg-temp
 *.local
 dist
+lib/
 dist-ssr
 node_modules
 .idea/
 *.log
+*-lock.*

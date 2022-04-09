@@ -1,9 +1,7 @@
 import type { ExtractPropTypes, PropType } from 'vue'
-import { computed, defineComponent, h, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
-import { Assert } from '../assert'
+import { computed, defineComponent, h, nextTick, onMounted, onUnmounted, ref, renderSlot, watch } from 'vue'
 import { SCROLL_STRATEGY } from '../strategy'
-import { getStyle, useAutoDOM, useContext, useRequestAnimation } from '../composable'
-import { getRealNumber } from '../composable/useRequestAnimation'
+import { useAutoDOM, useContext, useRequestAnimation } from '../composable'
 
 export const seamlessScrollProps = {
   to: { // 滚动方向
@@ -30,6 +28,7 @@ export type SeamlessScrollProps = ExtractPropTypes<typeof seamlessScrollProps>
 
 export function defineSeamlessScroll() {
   return defineComponent({
+    name: 'SeamlessScroll',
     /**
      * 滚动区域的参数
      */
@@ -47,43 +46,38 @@ export function defineSeamlessScroll() {
       const strategy = SCROLL_STRATEGY.get(props.to)
       const viewport = ref({ width: 0, height: 0 })
 
+      const overContent = computed(() => strategy?.overContent(containerConfig.value, viewport.value) as boolean)
       // 容器根据内容自适应
       useAutoDOM(contentRef, (el, width, height) => {
-        setContent({
-          el: contentRef.value as HTMLDivElement,
-          width,
-          height: height * 2,
-        })
-        setContainer({
-          el: containerRef.value as HTMLDivElement,
-          width,
-          height,
-        })
-        setViewPort({
-          width: props.width || `${width}px`,
-          height: props.height || `${height}px`,
-        })
-        contentRefStyle.value = {
-          width: strategy?.contentWidth(contentConfig.value, props.width as string),
-          height: strategy?.contentHeight(contentConfig.value, props.height as string),
+        if (width !== 0 && height !== 0) {
+          setContainer({
+            el: containerRef.value as HTMLDivElement,
+            width,
+            height,
+          })
+          setContent({
+            el: contentRef.value as HTMLDivElement,
+            width,
+            height,
+          })
+          setViewPort({
+            width: props.width || `${width}px`,
+            height: props.height || `${height}px`,
+          })
         }
-      })
+        containerRef.value!.style.width = viewportConfig.value.width
+        containerRef.value!.style.height = viewportConfig.value.height
 
-      const stopWatchViewport = watch(viewportConfig, (value) => {
-        containerRefStyle.value = {
-          width: value.width,
-          height: value.height,
-        }
-      })
-      watch(containerRefStyle, async() => {
-        await nextTick()
+        contentRef.value!.style.width = strategy?.contentWidth(contentConfig.value, props.width as string) as string
+        contentRef.value!.style.height = strategy?.contentHeight(contentConfig.value, props.height as string) as string
+
         viewport.value = {
-          width: getRealNumber(getStyle(containerRef.value as HTMLElement, 'width')),
-          height: getRealNumber(getStyle(containerRef.value as HTMLElement, 'height')),
+          width: containerRef.value?.offsetWidth as number,
+          height: containerRef.value?.offsetHeight as number,
         }
       })
 
-      const enableMove = computed(() => props.enable && strategy?.overContent(containerConfig.value, viewport.value) as boolean)
+      const enableMove = computed(() => props.enable && overContent.value)
 
       // 默认样式
       const defaultcontainerRefStyle = {
@@ -100,9 +94,6 @@ export function defineSeamlessScroll() {
       const toggleScroll = function(flag: boolean) {
         scrolling.value = flag
       }
-
-      // 初始化滚动状态
-      toggleScroll(enableMove.value)
 
       const { startAnimation, stopAnimation } = useRequestAnimation(() => {
         move(strategy!.start(containerConfig.value))
@@ -122,7 +113,7 @@ export function defineSeamlessScroll() {
         moveLength.value += 1
       }
 
-      watch(() => props.enable, () => {
+      const stopWatchEnable = watch(() => props.enable, () => {
         if (enableMove.value) {
           startAnimation()
           toggleScroll(true)
@@ -136,31 +127,38 @@ export function defineSeamlessScroll() {
         immediate: true,
       })
 
-      const isUpdate = ref(false)
-      let updateTimer: any
-      function updateData(fn: () => void) {
-        isUpdate.value = true
-        if (updateTimer) clearTimeout(updateTimer)
-        updateTimer = setTimeout(() => {
-          fn()
-          isUpdate.value = false
-        }, 5)
-      }
+      /**
+       * 监听是否超出可视区域
+       */
+      const stopWatchOverContent = watch(() => overContent.value, (value) => {
+        if (value)
+          toggleScroll(value)
+      })
 
+      /**
+       * 挂载时：
+       * 1、初始化滚动状态: (1) 内容没有超出可视区域不滚动 （2）设置有参数enable=false不滚动
+       * 2、设置滚动的起点位置
+       * 3、启动滚动动画
+       */
       onMounted(async() => {
         await nextTick()
+        // 初始化滚动状态
+        toggleScroll(enableMove.value)
         moveLength.value = strategy!.start(containerConfig.value)
         startAnimation()
       })
 
+      /**
+       * 卸载时：
+       * 1、清除动画
+       * 2、清除监听 enable
+       * 2、清除对是否超出可视区域的监听
+       */
       onUnmounted(() => {
         stopAnimation()
-        stopWatchViewport()
-        if (updateTimer) clearTimeout(updateTimer)
-      })
-
-      ctx.expose({
-        updateData,
+        stopWatchEnable()
+        stopWatchOverContent()
       })
 
       const contentStyle = computed(() => {
@@ -172,13 +170,6 @@ export function defineSeamlessScroll() {
         }
       })
       return () => {
-        const slot = ctx.slots.default?.()
-        Assert.notEmpty(slot, 'SeamlessScroll: You must provide a default slot')
-        Assert.isTrue(slot!.length === 1, 'SeamlessScroll: You must provide only one default slot')
-        const Comp = slot![0].type as any
-        const compProps = slot![0].props
-        const compChildren = slot![0].children as any
-
         return h('div', {
           class: 'seamless-scroll-container',
           ref: containerRef,
@@ -196,17 +187,13 @@ export function defineSeamlessScroll() {
             ...defaultContentStyle,
             ...contentStyle.value,
           },
-        },
-        isUpdate.value
-          ? []
-          : (strategy?.overContent(containerConfig.value, viewport.value)
-            ? [h(Comp, { ...compProps }, compChildren),
-              h(Comp, { ...compProps }, compChildren)]
-            : [
-              h(Comp, { ...compProps }, compChildren),
-            ])
-          ,
-        ))
+        }, overContent.value
+          ? [
+            renderSlot(ctx.slots, 'default'),
+            renderSlot(ctx.slots, 'default')]
+          : [
+            renderSlot(ctx.slots, 'default'),
+          ]))
       }
     },
   })

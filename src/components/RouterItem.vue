@@ -25,5 +25,10 @@
         /resize
       </div>
     </router-link>
+    <router-link to="/update">
+      <div btn ml-5>
+        /update
+      </div>
+    </router-link>
   </div>
 </template>

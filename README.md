@@ -17,13 +17,17 @@ Demo: https://vuescroll-container.netlify.app/
 |  height  |  可视区高度  |  auto  |  Number |
 |  enable  |  启动滚动  |  true  |  boolean |
 
-| **方法** | **描述** | **默认值** |  **类型** |
-|:---|:---|:---|:---|
-|  updateData  |  更新数据  | 无  |  (fn: () => void ) => void |
-
 # 快速使用
 
-> 暂时不支持npm， yarn安装
+```
+npm install -S @twoke/seamless-scroll
+
+or
+
+pnpm install -S  @twoke/seamless-scroll
+```
+
+
 ```html
 <script setup lang="ts">
 import { SeamlessScroll } from '~/composables/scroll-core'

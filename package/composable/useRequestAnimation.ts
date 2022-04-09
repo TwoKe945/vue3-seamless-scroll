@@ -50,7 +50,7 @@ export function getRealNumber(num: string | undefined) {
 
 // 获取dom元素计算后的样式, 兼容IE8
 export function getStyle(dom: HTMLElement, style: any) {
-  if (window.getComputedStyle) { return window.getComputedStyle(dom, null)[style] }
+  if (window.getComputedStyle) { return window.getComputedStyle(dom)[style] }
   else {
     // @ts-expect-error TS2339 - getComputedStyle is not defined 兼容IE
     return dom?.currentStyle[style]
