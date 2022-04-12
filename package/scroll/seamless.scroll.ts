@@ -12,6 +12,10 @@ export const seamlessScrollProps = {
     type: Boolean,
     default: true,
   },
+  duration: {
+    type: Number,
+    default: 17,
+  },
   width: { // 可视窗口宽度
     type: String,
   },
@@ -21,6 +25,10 @@ export const seamlessScrollProps = {
   enable: { // 是否启用滚动
     type: Boolean,
     default: true,
+  },
+  step: {
+    type: Number,
+    default: 1,
   },
 }
 
@@ -97,7 +105,7 @@ export function defineSeamlessScroll() {
 
       const { startAnimation, stopAnimation } = useRequestAnimation(() => {
         move(strategy!.start(containerConfig.value))
-      })
+      }, props.duration !== 17, props.duration)
       /**
        * 检查是否超出边界
        */
@@ -110,9 +118,12 @@ export function defineSeamlessScroll() {
           return
         if (isOverflow.value)
           moveLength.value = startStep
-        moveLength.value += 1
+        moveLength.value += props.step
       }
 
+      /**
+       * 监听是否开起滚动
+       */
       const stopWatchEnable = watch(() => props.enable, () => {
         if (enableMove.value) {
           startAnimation()

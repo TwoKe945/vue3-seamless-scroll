@@ -30,5 +30,10 @@
         /update
       </div>
     </router-link>
+    <router-link to="/step">
+      <div btn ml-5>
+        /step
+      </div>
+    </router-link>
   </div>
 </template>

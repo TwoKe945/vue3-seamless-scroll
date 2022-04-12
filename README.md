@@ -16,6 +16,7 @@ Demo: https://vuescroll-container.netlify.app/
 |  width  |  可视区宽度  |  auto  |  Number |
 |  height  |  可视区高度  |  auto  |  Number |
 |  enable  |  启动滚动  |  true  |  boolean |
+|  duration  |  动画延时  |  17  |  Number |
 
 # 快速使用
 
