@@ -56,7 +56,7 @@ export function defineSeamlessScroll() {
 
       const overContent = computed(() => strategy?.overContent(containerConfig.value, viewport.value) as boolean)
       // 容器根据内容自适应
-      useAutoDOM(contentRef, (el, width, height) => {
+      const { resize } = useAutoDOM(contentRef, (el, width, height) => {
         if (width !== 0 && height !== 0) {
           setContainer({
             el: containerRef.value as HTMLDivElement,
@@ -83,6 +83,14 @@ export function defineSeamlessScroll() {
           width: containerRef.value?.offsetWidth as number,
           height: containerRef.value?.offsetHeight as number,
         }
+      })
+
+      function autoResize() {
+        resize()
+      }
+
+      ctx.expose({
+        autoResize,
       })
 
       const enableMove = computed(() => props.enable && overContent.value)
@@ -201,7 +209,8 @@ export function defineSeamlessScroll() {
         }, overContent.value
           ? [
             renderSlot(ctx.slots, 'default'),
-            renderSlot(ctx.slots, 'default')]
+            renderSlot(ctx.slots, 'default'),
+          ]
           : [
             renderSlot(ctx.slots, 'default'),
           ]))

@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 import { nextTick, onMounted, ref } from 'vue'
-import { useResizeObserver } from '@vueuse/core'
+import { useMutationObserver, useResizeObserver } from '@vueuse/core'
 import { getRealNumber, getStyle } from './useRequestAnimation'
 
 function initDOM(el: Ref<HTMLElement>, width: number, height: number) {
@@ -16,12 +16,19 @@ export function useAutoDOM(
   fn: (el: Ref<HTMLElement>, width: number, height: number) => void = initDOM) {
   const context = ref<HTMLElement>()
   onMounted(async() => {
+    await autoResize()
+    useMutationObserver(elRef, autoResize, {
+      childList: true,
+    })
+  })
+
+  async function autoResize() {
     await nextTick()
     const el = elRef.value
     context.value = el?.children[0] as HTMLElement
     resize()
     useResizeObserver(context, resize)
-  })
+  }
 
   function resize() {
     if (context.value) {
@@ -41,5 +48,6 @@ export function useAutoDOM(
 
   return {
     resize,
+    autoResize,
   }
 }

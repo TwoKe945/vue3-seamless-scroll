@@ -23,28 +23,55 @@ const columns = defineColumns([
 
 type TableData = RowData<typeof columns>
 
-const dataArray: TableData[] = [
-  {
-    name: 'John Brown',
-    age: 18,
-    group: 'A',
-  },
-  {
-    name: 'Jim Green',
-    age: 25,
-    group: 'B',
-  },
-  {
-    name: 'Joe Black',
-    age: 30,
-    group: 'C',
-  },
-  {
-    name: 'Jim Red',
-    age: 28,
-    group: 'D',
-  },
-]
+const dataArray = ref<TableData[]>()
+
+// dataArray.value = [{
+//   name: 'John Brown',
+//   age: 18,
+//   group: 'A',
+// },
+// {
+//   name: 'Jim Green',
+//   age: 25,
+//   group: 'B',
+// },
+// {
+//   name: 'Joe Black',
+//   age: 30,
+//   group: 'C',
+// },
+// {
+//   name: 'Jim Red',
+//   age: 28,
+//   group: 'D',
+// },
+// ]
+
+setTimeout(() => {
+  dataArray.value = [
+    {
+      name: 'John Brown',
+      age: 18,
+      group: 'A',
+    },
+    {
+      name: 'Jim Green',
+      age: 25,
+      group: 'B',
+    },
+    {
+      name: 'Joe Black',
+      age: 30,
+      group: 'C',
+    },
+    {
+      name: 'Jim Red',
+      age: 28,
+      group: 'D',
+    },
+  ]
+  console.log('更新')
+}, 4000)
 
 const TableScroll = defineTableScroll<TableData>(columns)
 

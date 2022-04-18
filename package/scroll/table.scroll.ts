@@ -1,5 +1,5 @@
 import type { PropType } from 'vue'
-import { defineComponent, h, renderList } from 'vue'
+import { defineComponent, h, ref, renderList } from 'vue'
 import type { Column } from '../types'
 import { SeamlessScroll, seamlessScrollProps } from './seamless.scroll'
 
@@ -64,32 +64,43 @@ export function defineTableScroll<T>(
         listStyle: 'none',
       }
 
-      return () => h('div', {
-        class: tableClass,
-      }, [
-        h('ul', {
-          class: headerClass,
-          style: mergeStyle(defaultHeadStyle, {}),
-        }, renderList(columns, col => h('li', {
-          class: cellClass,
-          style: mergeStyle(defaultColumnStyle(col), col.style),
-        }, col.title))),
-        h(SeamlessScroll, {
-          ...props,
-          class: bodyClass,
-        },
-        h('div', {},
-          renderList(props.data, data => h('ul', {
-            class: bodyRowClass,
-            onClick: () => ctx.emit('clickItem', data),
-            style: mergeStyle(defaultRowStyle, {}),
+      const seamlessScroll = ref(null)
+
+      return () => {
+        console.log('更新', props.data)
+        return h('div', {
+          class: tableClass,
+        }, [
+          h('ul', {
+            class: headerClass,
+            style: mergeStyle(defaultHeadStyle, {}),
           }, renderList(columns, col => h('li', {
             class: cellClass,
-            style: { ...mergeStyle(defaultColumnStyle(col), col.style), ...(formatStyle ? formatStyle(col.key, (data as any)[col.key]) : {}) },
-          }, (data as any)[col.key])))),
-        ),
-        ),
-      ])
+            style: mergeStyle(defaultColumnStyle(col), col.style),
+          }, col.title))),
+          h(SeamlessScroll, {
+            ...props,
+            class: bodyClass,
+            ref: seamlessScroll,
+          },
+          props.data && props.data.length > 0
+            ? h('div', {
+              key: 'table-scroll-body-content',
+            },
+            renderList(props.data, (data, index) => h('ul', {
+              class: bodyRowClass,
+              key: `table-scroll-row-${index}`,
+              onClick: () => ctx.emit('clickItem', data),
+              style: mergeStyle(defaultRowStyle, {}),
+            }, renderList(columns, col => h('li', {
+              class: cellClass,
+              style: { ...mergeStyle(defaultColumnStyle(col), col.style), ...(formatStyle ? formatStyle(col.key, (data as any)[col.key]) : {}) },
+            }, (data as any)[col.key])))),
+            )
+            : '',
+          ),
+        ])
+      }
     },
   })
 }
